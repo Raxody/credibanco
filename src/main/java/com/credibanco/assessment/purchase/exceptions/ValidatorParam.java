@@ -1,4 +1,4 @@
-package com.credibanco.assessment.card.exceptions;
+package com.credibanco.assessment.purchase.exceptions;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;

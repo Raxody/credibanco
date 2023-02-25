@@ -8,16 +8,19 @@ import com.credibanco.assessment.card.model.helper.CardNumberEncryptor;
 import com.credibanco.assessment.card.model.helper.UtilityCard;
 import com.credibanco.assessment.card.persistence.crud.CardCrudRepository;
 import com.credibanco.assessment.card.repository.CardRepository;
+import com.credibanco.assessment.purchase.repository.PurchaseRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
-public class CreateCardService implements CardRepository {
+public class CardService implements CardRepository {
     private static final String CREATED = "creada";
-    private CardCrudRepository cardCrudRepository;
-    public CreateCardService(CardCrudRepository cardCrudRepository) {
+    private final CardCrudRepository cardCrudRepository;
+    private final PurchaseRepository purchaseRepository;
+
+    public CardService(CardCrudRepository cardCrudRepository, PurchaseRepository purchaseRepository) {
         this.cardCrudRepository = cardCrudRepository;
+        this.purchaseRepository = purchaseRepository;
     }
 
     @Override
@@ -25,7 +28,6 @@ public class CreateCardService implements CardRepository {
     public Card createCard(DtoCreateCard dtoCreateCard) {
         Card card = FactoryCard.toCreateSpecificCard(dtoCreateCard);
         card.setPan(findLastPanAndAssignNewPan());
-        card.setCreationTime(LocalDateTime.now());
         card.setEnrollmentNumber(UtilityCard.randomNumberFromOneToOneHundredToEnrollCard());
         card.setStatus(CREATED);
         return cardCrudRepository.save(card);
@@ -62,6 +64,17 @@ public class CreateCardService implements CardRepository {
     @Transactional(readOnly = true)
     public Optional<Card> findCardByPan(String pan) {
         return cardCrudRepository.findById(pan);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteCard(String pan) {
+        return findCardByPan(pan)
+                .map(card -> {
+                    purchaseRepository.deletePurchasesByPan(pan);
+                    cardCrudRepository.deleteById(pan);
+                    return Boolean.TRUE;})
+                .orElse(Boolean.FALSE);
     }
 
 

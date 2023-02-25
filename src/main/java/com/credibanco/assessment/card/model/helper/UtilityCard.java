@@ -4,7 +4,7 @@ import java.util.Random;
 
 public final class UtilityCard {
     private static final int ONE = 1;
-    private static final int ONE_HUNDRED = 1;
+    private static final int ONE_HUNDRED = 100;
 
     private UtilityCard() {}
 

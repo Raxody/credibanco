@@ -11,8 +11,8 @@ public class Debit extends Card {
     public Debit() {
     }
 
-    public Debit(String pan, String owner, String id, String numberPhone, String status, LocalDateTime creationTime, Integer enrollmentNumber) {
-        super(pan, owner, id, numberPhone, status, creationTime, enrollmentNumber);
+    public Debit(String pan, String owner, String id, String numberPhone, String status, Integer enrollmentNumber) {
+        super(pan, owner, id, numberPhone, status, enrollmentNumber);
     }
 
     public Debit(String pan, String owner, String id, String numberPhone) {

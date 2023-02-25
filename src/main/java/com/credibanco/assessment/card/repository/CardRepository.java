@@ -16,5 +16,7 @@ public interface CardRepository {
     Map<String, String> enrollCard(DtoEnrollCard dtoEnrollCard);
     Optional<Card> findCardByPan(String pan);
 
+    boolean deleteCard(String pan);
+
 
 }

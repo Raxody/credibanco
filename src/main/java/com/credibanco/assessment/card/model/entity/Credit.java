@@ -11,8 +11,8 @@ public class Credit extends Card{
     public Credit() {
     }
 
-    public Credit(String pan, String owner, String id, String numberPhone, String status, LocalDateTime creationTime, Integer enrollmentNumber) {
-        super(pan, owner, id, numberPhone, status, creationTime, enrollmentNumber);
+    public Credit(String pan, String owner, String id, String numberPhone, String status, Integer enrollmentNumber) {
+        super(pan, owner, id, numberPhone, status, enrollmentNumber);
     }
 
     public Credit(String pan, String owner, String id, String numberPhone) {
