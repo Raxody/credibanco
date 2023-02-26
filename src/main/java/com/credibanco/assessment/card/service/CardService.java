@@ -15,6 +15,14 @@ import java.util.*;
 
 public class CardService implements CardRepository {
     private static final String CREATED = "creada";
+    private static final String THE_CARD_DOES_NOT_EXIT= "Tarjeta no existe";
+    private static final String PAN = "Pan";
+    private static final String SUCCESS = "Exito";
+    private static final String DOUBLE_ZERO = "00";
+    private static final String ZERO_ONE = "01";
+    private static final String ZERO_TWO = "02";
+    private static final String ENROLLED = "enrolada";
+    private static final String  INVALID_VALIDATION_NUMBER = "Numero de validación invalido";
     private final CardCrudRepository cardCrudRepository;
     private final PurchaseRepository purchaseRepository;
 
@@ -47,16 +55,16 @@ public class CardService implements CardRepository {
         Map<String, String> responseToEnrollCard = new HashMap<>();
         String encryptedPan = CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(dtoEnrollCard.getPan());
         if(!card.isPresent()){
-            return Collections.singletonMap("01","Tarjeta no existe");
+            return Collections.singletonMap(ZERO_ONE,THE_CARD_DOES_NOT_EXIT);
         } else if (card.get().getEnrollmentNumber().equals(Integer.parseInt(dtoEnrollCard.getNumberValidation()))) {
-            card.get().setStatus("enrolada");
+            card.get().setStatus(ENROLLED);
             cardCrudRepository.save(card.get());
-            responseToEnrollCard.put("00","Exito");
-            responseToEnrollCard.put("pan",encryptedPan);
+            responseToEnrollCard.put(DOUBLE_ZERO,SUCCESS);
+            responseToEnrollCard.put(PAN,encryptedPan);
             return responseToEnrollCard;
         }
-        responseToEnrollCard.put("02","Numero de validación invalido");
-        responseToEnrollCard.put("pan",encryptedPan);
+        responseToEnrollCard.put(ZERO_TWO,INVALID_VALIDATION_NUMBER);
+        responseToEnrollCard.put(PAN,encryptedPan);
         return responseToEnrollCard;
     }
 

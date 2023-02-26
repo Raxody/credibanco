@@ -19,16 +19,23 @@ import java.util.Map;
 @RequestMapping("card")
 public class CardController {
 
+    private static final String DOUBLE_ZERO = "00";
+    private static final String ZERO_ONE = "01";
+    private static final String ZERO_TWO = "02";
+    private static final String ZERO_FOUR = "04";
+    private static final String NOT_FOUND = "No encontrado";
+    private static final String THE_CARD_HAS_BEEN_REMOVED = "Se ha eliminado la tarjeta";
+    private static final String THE_CARD_HAS_NOT_BEEN_REMOVED = "No se ha eliminado la tarjeta";
     private final CardService cardService;
 
     public CardController(CardService cardService) {
         this.cardService = cardService;
     }
 
-    @PostMapping("/createCard")
+    @PostMapping("/create")
     public ResponseEntity<Map<String,String>> createCard(@Valid @RequestBody DtoCreateCard dtoCreateCard, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return ValidatorParam.getErrors(bindingResult,"00");
+            return ValidatorParam.getErrors(bindingResult,DOUBLE_ZERO);
         }
         return FactoryResponseEntityMap
                 .toMap(cardService
@@ -36,10 +43,10 @@ public class CardController {
                         HttpStatus.CREATED);
     }
 
-    @PutMapping("/enrollCard")
+    @PutMapping("/enroll")
     public ResponseEntity<Map<String,String>> update(@Valid @RequestBody DtoEnrollCard dtoEnrollCard, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
-            return ValidatorParam.getErrors(bindingResult,"04");
+            return ValidatorParam.getErrors(bindingResult,ZERO_FOUR);
         }
         Map<String,String> responseToEnrollCard = cardService.enrollCard(dtoEnrollCard);
         Map.Entry<String, String> firstEntry = responseToEnrollCard.entrySet().iterator().next();
@@ -54,14 +61,14 @@ public class CardController {
         return cardService
                 .findCardByPan(pan)
                 .map(card -> FactoryResponseEntityMap.toMapFindByPan(card,HttpStatus.OK))
-                .orElse( new ResponseEntity<>(Collections.singletonMap("01","No encontrado"),HttpStatus.NOT_FOUND));
+                .orElse( new ResponseEntity<>(Collections.singletonMap(ZERO_ONE,NOT_FOUND),HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/delete/{pan}")
     public ResponseEntity<Map<String,String>> delete(@PathVariable("pan") String pan){
         return cardService.deleteCard(pan) ?
-                new ResponseEntity<>(Collections.singletonMap("00","Se ha eliminado la tarjeta"),HttpStatus.OK):
-                new ResponseEntity<>(Collections.singletonMap("01","No se ha eliminado la tarjeta"),HttpStatus.NOT_FOUND);
+                new ResponseEntity<>(Collections.singletonMap(DOUBLE_ZERO,THE_CARD_HAS_BEEN_REMOVED),HttpStatus.OK):
+                new ResponseEntity<>(Collections.singletonMap(ZERO_ONE,THE_CARD_HAS_NOT_BEEN_REMOVED),HttpStatus.NOT_FOUND);
     }
 
 

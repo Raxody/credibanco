@@ -1,8 +1,10 @@
 package com.credibanco.assessment.purchase.repository;
-
+import com.credibanco.assessment.purchase.model.dto.DtoCancelTransactionPurchase;
 import com.credibanco.assessment.purchase.model.dto.DtoCreatePurchase;
+import com.credibanco.assessment.purchase.model.entity.Purchase;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface PurchaseRepository {
 
@@ -10,6 +12,7 @@ public interface PurchaseRepository {
 
     String findLastReferenceNumberAndAssignNewLastReference();
     int deletePurchasesByPan(String pan);
-    Map<String, String> cancelTransaction(DtoCreatePurchase dtoCreatePurchase);
+    Map<String, String> cancelTransaction(DtoCancelTransactionPurchase dtoCancelTransactionPurchase);
+    Optional<Purchase> findPurchaseByReferenceNumber(String referenceNumber);
 
 }

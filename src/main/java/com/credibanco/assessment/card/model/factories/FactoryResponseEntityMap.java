@@ -10,34 +10,32 @@ import java.util.Map;
 
 public final class FactoryResponseEntityMap {
 
+    private static final String DOUBLE_ZERO = "00";
+    private static final String SUCCESS = "Exito";
+    private static final String ENROLLMENT_NUMBER = "enrollmentNumber";
+    private static final String PAN = "pan";
+    private static final String OWNER = "owner";
+    private static final String ID = "id";
+    private static final String NUMBER_PHONE = "numberPhone";
+    private static final String STATUS = "status";
     private FactoryResponseEntityMap() {}
     public static ResponseEntity<Map<String, String>> toMap(Card card, HttpStatus httpStatus) {
         Map<String, String> responseCard = new HashMap<>();
-        responseCard.put("00", "Exito");
-        responseCard.put("enrollmentNumber",String.valueOf(card.getEnrollmentNumber()));
-        responseCard.put("pan", CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(card.getPan()));
+        responseCard.put(DOUBLE_ZERO, SUCCESS);
+        responseCard.put(ENROLLMENT_NUMBER,String.valueOf(card.getEnrollmentNumber()));
+        responseCard.put(PAN, CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(card.getPan()));
         return new ResponseEntity<>(responseCard, httpStatus);
     }
 
     public static ResponseEntity<Map<String, String>> toMapFindByPan(Card card, HttpStatus httpStatus) {
         Map<String, String> responseCard = new HashMap<>();
-        responseCard.put("00", "Exito");
-        responseCard.put("titular",String.valueOf(card.getOwner()));
-        responseCard.put("cedula",String.valueOf(card.getId()));
-        responseCard.put("telefono",String.valueOf(card.getNumberPhone()));
-        responseCard.put("estado",String.valueOf(card.getStatus()));
-        responseCard.put("pan", CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(card.getPan()));
+        responseCard.put(DOUBLE_ZERO, SUCCESS);
+        responseCard.put(OWNER,String.valueOf(card.getOwner()));
+        responseCard.put(ID,String.valueOf(card.getId()));
+        responseCard.put(NUMBER_PHONE,String.valueOf(card.getNumberPhone()));
+        responseCard.put(STATUS,String.valueOf(card.getStatus()));
+        responseCard.put(PAN, CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(card.getPan()));
         return new ResponseEntity<>(responseCard, httpStatus);
     }
-
-    /*public static ResponseEntity<Map<String, String>> userToMap(dto user, HttpStatus httpStatus){
-        Map<String,String>  responseUser = new HashMap<>();
-        responseUser.put("00","Exito");
-        responseUser.put("id",String.valueOf(user.getId()));
-        responseUser.put("name",user.getName());
-        responseUser.put("email",user.getEmail());
-        responseUser.put("password", user.getPassword());
-        return new ResponseEntity<>(responseUser,httpStatus);
-    }*/
 
 }

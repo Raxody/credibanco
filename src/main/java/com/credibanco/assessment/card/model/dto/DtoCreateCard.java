@@ -24,7 +24,7 @@ public class DtoCreateCard {
     private static final String THE_NUMBER_PHONE_ONLY_ACCEPT_NUMBERS = "El numero de celular solo permite numeros";
     private static final String THE_NUMBER_TELEPHONE_MUST_BE_TEN_CHARACTERS_LONG = "El numero de celular debe tener 10 caracteres exactos";
     private static final String THE_TYPE_OF_CARD_MUST_NOT_BE_EMPTY = "El numero de la tarjeta no debe ser vacio";
-    private static final String THE_TYPE_OF_CARD_ONLY_ACCEPTS_DEBIT_OR_CREDIT = "El tipo de tarjeta de credito solo acepta debido o credito";
+    private static final String THE_TYPE_OF_CARD_ONLY_ACCEPTS_DEBIT_OR_CREDIT = "El tipo de tarjeta solo acepta debido o credito";
 
 
 
