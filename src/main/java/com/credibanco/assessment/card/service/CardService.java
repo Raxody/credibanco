@@ -32,6 +32,14 @@ public class CardService implements CardRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Card> getAllCards() {
+        List<Card> cards = (List<Card>) cardCrudRepository.findAll();
+        cards.forEach(card -> card.setPan(CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(card.getPan())));
+        return cards;
+    }
+
+    @Override
     @Transactional
     public Card createCard(DtoCreateCard dtoCreateCard) {
         Card card = FactoryCard.toCreateSpecificCard(dtoCreateCard);

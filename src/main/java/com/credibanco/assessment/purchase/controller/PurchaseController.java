@@ -2,6 +2,7 @@ package com.credibanco.assessment.purchase.controller;
 import com.credibanco.assessment.card.exceptions.ValidatorParam;
 import com.credibanco.assessment.purchase.model.dto.DtoCancelTransactionPurchase;
 import com.credibanco.assessment.purchase.model.dto.DtoCreatePurchase;
+import com.credibanco.assessment.purchase.model.entity.Purchase;
 import com.credibanco.assessment.purchase.service.PurchaseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,16 +10,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("purchase")
+@RequestMapping("/purchase")
 public class PurchaseController {
     private static final String DOUBLE_ZERO = "00";
     private static final String ZERO_THREE = "03";
     private final PurchaseService purchaseService;
     public PurchaseController(PurchaseService purchaseService) {
         this.purchaseService = purchaseService;
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<Purchase>> getAllCards(){
+        return ResponseEntity.status(HttpStatus.OK).body(purchaseService.getAllPurchases());
     }
 
     @PostMapping("/create")

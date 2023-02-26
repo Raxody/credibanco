@@ -9,6 +9,8 @@ import com.credibanco.assessment.purchase.service.PurchaseService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class BeanConfiguration {
@@ -20,5 +22,17 @@ public class BeanConfiguration {
     @Bean
     public PurchaseService purchaseServiceImplementation(@Lazy PurchaseCrudRepository purchaseCrudRepository,@Lazy CardRepository cardRepository){
         return new PurchaseService(purchaseCrudRepository,cardRepository);
+    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:4200")
+                        .allowedMethods("*")
+                        .allowedHeaders("*");
+            }
+        };
     }
 }

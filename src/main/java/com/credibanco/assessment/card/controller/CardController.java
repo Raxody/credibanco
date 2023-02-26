@@ -3,6 +3,7 @@ package com.credibanco.assessment.card.controller;
 import com.credibanco.assessment.card.exceptions.ValidatorParam;
 import com.credibanco.assessment.card.model.dto.DtoCreateCard;
 import com.credibanco.assessment.card.model.dto.DtoEnrollCard;
+import com.credibanco.assessment.card.model.entity.Card;
 import com.credibanco.assessment.card.model.factories.FactoryResponseEntityMap;
 import com.credibanco.assessment.card.service.CardService;
 import org.springframework.http.HttpStatus;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("card")
+@RequestMapping("/card")
 public class CardController {
 
     private static final String DOUBLE_ZERO = "00";
@@ -30,6 +32,10 @@ public class CardController {
 
     public CardController(CardService cardService) {
         this.cardService = cardService;
+    }
+    @GetMapping()
+    public ResponseEntity<List<Card>> getAllCards(){
+        return ResponseEntity.status(HttpStatus.OK).body(cardService.getAllCards());
     }
 
     @PostMapping("/create")

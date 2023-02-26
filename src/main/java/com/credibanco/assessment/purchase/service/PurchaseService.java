@@ -1,6 +1,7 @@
 package com.credibanco.assessment.purchase.service;
 
 import com.credibanco.assessment.card.model.entity.Card;
+import com.credibanco.assessment.card.model.helper.CardNumberEncryptor;
 import com.credibanco.assessment.card.repository.CardRepository;
 import com.credibanco.assessment.purchase.model.dto.DtoCancelTransactionPurchase;
 import com.credibanco.assessment.purchase.model.dto.DtoCreatePurchase;
@@ -11,6 +12,7 @@ import com.credibanco.assessment.purchase.persistence.crud.PurchaseCrudRepositor
 import com.credibanco.assessment.purchase.repository.PurchaseRepository;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -102,6 +104,13 @@ public class PurchaseService implements PurchaseRepository {
     @Transactional(readOnly = true)
     public Optional<Purchase> findPurchaseByReferenceNumber(String referenceNumber) {
         return purchaseCrudRepository.findById(referenceNumber);
+    }
+
+    @Override
+    public List<Purchase> getAllPurchases() {
+        List<Purchase> purchases = (List<Purchase>) purchaseCrudRepository.findAll();
+        purchases.stream().forEach(purchase -> purchase.setPan(CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(purchase.getPan())));
+        return purchases;
     }
 
 

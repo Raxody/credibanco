@@ -46,6 +46,4 @@ public class DtoCreateCard {
     @NotBlank(message = THE_TYPE_OF_CARD_MUST_NOT_BE_EMPTY)
     @Pattern(regexp = "^(credito|debito)$",message = THE_TYPE_OF_CARD_ONLY_ACCEPTS_DEBIT_OR_CREDIT)
     private String typeCard;
-
-
 }
