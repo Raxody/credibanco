@@ -2,29 +2,23 @@ package com.credibanco.assessment.card.model.service;
 
 
 import com.credibanco.assessment.card.model.dto.DtoCreateCard;
+import com.credibanco.assessment.card.model.dto.DtoEnrollCard;
 import com.credibanco.assessment.card.model.entity.Card;
 import com.credibanco.assessment.card.model.testdatabuilder.CardTestDataBuilder;
 import com.credibanco.assessment.card.persistence.crud.CardCrudRepository;
-import com.credibanco.assessment.card.repository.CardRepository;
 import com.credibanco.assessment.card.service.CardService;
-import com.credibanco.assessment.purchase.persistence.crud.PurchaseCrudRepository;
 import com.credibanco.assessment.purchase.repository.PurchaseRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
+import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CardServiceTest {
+class CardServiceTest {
 
     private final CardCrudRepository cardRepository = Mockito.mock(CardCrudRepository.class);
     private final PurchaseRepository purchaseRepository = Mockito.mock(PurchaseRepository.class);
-
     private final CardService cardService = new CardService(cardRepository,purchaseRepository);
 
     @Test
@@ -64,7 +58,7 @@ public class CardServiceTest {
         List<Card> responseListCards = cardService.getAllCards();
 
         // Assert
-        assertEquals(responseListCards.size(),1);
+        assertEquals(1,responseListCards.size());
     }
 
     @Test
@@ -102,6 +96,79 @@ public class CardServiceTest {
 
         // Assert
         assertTrue(responseDelete);
+    }
+
+
+    @Test
+    @DisplayName("should not be able to enroll the card because you cannot find the card")
+    void shouldNotEnrollTheCardBecauseCannotFindTheCard(){
+        // Arrange
+        DtoEnrollCard dtoEnrollCard = new CardTestDataBuilder()
+                .withPan("1000000000000000f")
+                .withEnrollmentNumber("55")
+                .buildDtoEnrollCard();
+        Card card = new CardTestDataBuilder()
+                .withPan("1000000000000000")
+                .build();
+        Mockito.when(cardRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
+
+        // Act
+        Map<String,String> responseCard = cardService.enrollCard(dtoEnrollCard);
+
+        // Assert
+        assertEquals(responseCard, Collections.singletonMap("01", "Tarjeta no existe"));
+    }
+
+    @Test
+    @DisplayName("should not be able to enroll the card because you cannot find the card")
+    void shouldEnrollTheCardSuccess(){
+        // Arrange
+        DtoEnrollCard dtoEnrollCard = new CardTestDataBuilder()
+                .withPan("1000000000000000")
+                .withEnrollmentNumber("55")
+                .buildDtoEnrollCard();
+
+        Card card = new CardTestDataBuilder()
+                .withPan("1000000000000000")
+                .withEnrollmentNumber("55")
+                .build();
+        Map<String,String> esperado = new HashMap<>();
+        esperado.put("00", "Exito");
+        esperado.put("Pan", "100000******0000");
+
+        Mockito.when(cardRepository.findById(Mockito.anyString())).thenReturn(Optional.of(card));
+
+        // Act
+        Map<String,String> responseToCreatePurchase = cardService.enrollCard(dtoEnrollCard);
+
+        // Assert
+        assertEquals(responseToCreatePurchase, esperado);
+
+    }
+
+    @Test
+    @DisplayName("should not enroll the card because the validation number is invalid")
+    void shouldNotEnrollTheCardBecauseTheValidationNumberIsInvalid(){
+        // Arrange
+        DtoEnrollCard dtoEnrollCard = new CardTestDataBuilder()
+                .withPan("1000000000000000")
+                .withEnrollmentNumber("55")
+                .buildDtoEnrollCard();
+
+        Card card = new CardTestDataBuilder()
+                .withPan("1000000000000000")
+                .withEnrollmentNumber("44")
+                .build();
+        Map<String,String> esperado = new HashMap<>();
+        esperado.put("02", "Numero de validación invalido");
+        esperado.put("Pan", "100000******0000");
+        Mockito.when(cardRepository.findById(Mockito.anyString())).thenReturn(Optional.of(card));
+
+        // Act
+        Map<String,String> responseToEnrollCard = cardService.enrollCard(dtoEnrollCard);
+
+        // Assert
+        assertEquals(responseToEnrollCard, esperado);
     }
 
 }

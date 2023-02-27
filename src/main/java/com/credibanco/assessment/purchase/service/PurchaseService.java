@@ -48,7 +48,7 @@ public class PurchaseService implements PurchaseRepository {
     public Map<String, String> createTransaction(DtoCreatePurchase dtoCreatePurchase) {
         Optional<Card> card = cardRepository.findCardByPan(dtoCreatePurchase.getPan());
         Map<String, String> responseToCreateTransaction = new HashMap<>();
-        if (!card.isPresent()) {
+        if (card.isEmpty()) {
             responseToCreateTransaction.put(ZERO_ONE, THE_CARD_DOES_NOT_EXIT);
             responseToCreateTransaction.put(STATUS_TRANSACTION, REJECTED);
         } else if (!card.get().getStatus().equals(ENROLLED)) {
@@ -83,7 +83,7 @@ public class PurchaseService implements PurchaseRepository {
     public Map<String, String> cancelTransaction(DtoCancelTransactionPurchase dtoCancelTransactionPurchase) {
         Optional<Purchase> purchase = findPurchaseByReferenceNumber(dtoCancelTransactionPurchase.getReferenceNumber());
         Map<String, String> responseToCancelTransaction = new HashMap<>();
-        if (!purchase.isPresent()) {
+        if (purchase.isEmpty()) {
             responseToCancelTransaction.put(ZERO_ONE, INVALID_REFERENCE_NUMBER);
         } else if (!purchase.get().getPan().equals(dtoCancelTransactionPurchase.getPan()) ||
                !String.valueOf(purchase.get().getPurchaseValue()).equals(dtoCancelTransactionPurchase.getPurchaseValue())) {

@@ -62,7 +62,7 @@ public class CardService implements CardRepository {
         Optional<Card> card = findCardByPan(dtoEnrollCard.getPan());
         Map<String, String> responseToEnrollCard = new HashMap<>();
         String encryptedPan = CardNumberEncryptor.panEncryptFirstSixAndLastFourCardNumbers(dtoEnrollCard.getPan());
-        if(!card.isPresent()){
+        if(card.isEmpty()){
             return Collections.singletonMap(ZERO_ONE,THE_CARD_DOES_NOT_EXIT);
         } else if (card.get().getEnrollmentNumber().equals(Integer.parseInt(dtoEnrollCard.getNumberValidation()))) {
             card.get().setStatus(ENROLLED);
@@ -92,6 +92,4 @@ public class CardService implements CardRepository {
                     return Boolean.TRUE;})
                 .orElse(Boolean.FALSE);
     }
-
-
 }
